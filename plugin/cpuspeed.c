@@ -11,9 +11,9 @@ int activate(void *internal) {
 	INTERNAL *ip = internal;
 
 	if (ip->setspeed == 0)
-		sprintf(cpucmd, "sudo /usr/pandora/scripts/op_cpuspeed.sh");
+		sprintf(cpucmd, "gksudo /usr/pandora/scripts/op_cpuspeed.sh");
 	else
-		sprintf(cpucmd, "sudo /usr/pandora/scripts/op_cpuspeed.sh %i", ip->setspeed);
+		sprintf(cpucmd, "gksudo /usr/pandora/scripts/op_cpuspeed.sh %i", ip->setspeed);
 
 	system(cpucmd);
 	return 0;

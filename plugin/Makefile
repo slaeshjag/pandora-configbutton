@@ -1,7 +1,7 @@
 CFLAGS += -O3 -Wall -fPIC -shared
 
 default:
-	$(CC) -o dummy.so dummy.c $(CFLAGS) -Wl,-soname,dummy.so
+	$(CC) -o cpuspeed.so cpuspeed.c $(CFLAGS) -Wl,-soname,cpuspeed.so
 	mkdir -p bin
 	$(CC) -o usbhost.so usbhost.c $(CFLAGS) -Wl,-soname,usbhost.so
 	$(CC) -o wifi.so wifi.c $(CFLAGS) -Wl,-soname,wifi.so

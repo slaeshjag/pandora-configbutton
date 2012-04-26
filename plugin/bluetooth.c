@@ -42,6 +42,7 @@ int getinfo(PLUGIN_INFO *info) {
 		info->icon_path = "bluetooth_disable.png";
 	} else {
 		info->label = "Enable Bluetooth";
+		internal->action = 1;
 		info->icon_path = "bluetooth_enable.png";
 	}
 

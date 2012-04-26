@@ -41,6 +41,7 @@ int getinfo(PLUGIN_INFO *info) {
 		info->label = "Disable WiFi";
 		info->icon_path = "wifi_disable.png";
 	} else {
+		internal->action = 1;
 		info->label = "Enable WiFi";
 		info->icon_path = "wifi_disable.png";
 	}

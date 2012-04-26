@@ -81,7 +81,7 @@ int loadPlugins(CONFIGBUTTON *c) {
 
 	/* This is a bit ugly, but I was unable to get sorting with linked lists working */
 
-	if ((c->plugin = malloc(sizeof(PLUGIN_STRUCT))) == NULL) {
+	if ((c->plugin = malloc(sizeof(PLUGIN_STRUCT)*c->plugins)) == NULL) {
 		c->plugins = 0;
 		return -1;
 	}

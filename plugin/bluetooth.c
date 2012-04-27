@@ -46,7 +46,7 @@ int getinfo(PLUGIN_INFO *info) {
 		info->icon_path = "bluetooth_enable.png";
 	}
 
-	info->sort_hint = 1;
+	info->sort_hint = 20;
 
 	return 0;
 }

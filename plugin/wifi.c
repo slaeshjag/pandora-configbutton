@@ -46,7 +46,7 @@ int getinfo(PLUGIN_INFO *info) {
 		info->icon_path = "wifi_disable.png";
 	}
 
-	info->sort_hint = 3;
+	info->sort_hint = 40;
 
 	return 0;
 }

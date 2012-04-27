@@ -48,7 +48,7 @@ int getinfo(PLUGIN_INFO *info) {
 		info->icon_path = "usbhost_enable.png";
 	}
 
-	info->sort_hint = 2;
+	info->sort_hint = 30;
 
 	return 0;
 }

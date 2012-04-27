@@ -14,9 +14,11 @@ int activate(void *internal) {
 	INTERNAL *ip = internal;
 
 	if (ip->action == 0) {
-		system("gksudo rmmod ehci-hcd");
+		system("/usr/pandora/scripts/op_usbhost.sh");
+//		system("gksudo rmmod ehci-hcd");
 	} else {
-		system("gksudo modprobe ehci-hcd");
+		system("/usr/pandora/scripts/op_usbhost.sh");
+//		system("gksudo modprobe ehci-hcd");
 	}
 
 	return 0;

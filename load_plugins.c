@@ -115,8 +115,6 @@ int initPlugins(CONFIGBUTTON *c) {
 	loadPlugins(c);
 	home = getenv("HOME");
 
-	return 0;
-
 	chdir(home);
 	if (chdir(".config-button") == 0)
 		loadPlugins(c);

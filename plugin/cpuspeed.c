@@ -36,7 +36,7 @@ int getinfo(PLUGIN_INFO *info) {
 			nnn = malloc(32);
 			sprintf(nnn, "%i MHz", 500+i*100);
 			sub->label = nnn;
-			sub->icon_path = "NO icon";
+			sub->icon_path = "/usr/share/icons/pandora/cpu.png";
 			sub->visible = 1;
 			internal = malloc(sizeof(INTERNAL));
 			internal->setspeed = 500+i*100;
@@ -47,7 +47,7 @@ int getinfo(PLUGIN_INFO *info) {
 		sub = malloc(sizeof(struct PLUGIN_SUBMENU));
 		sub->next = info->submenu;
 		sub->label = "Custom";
-		sub->icon_path = "No icon";
+		sub->icon_path = "/usr/share/icons/pandora/cpu.png";
 		sub->visible = 1;
 		internal = malloc(sizeof(INTERNAL));
 		internal->setspeed = 0;
@@ -62,7 +62,7 @@ int getinfo(PLUGIN_INFO *info) {
 	} else
 		sprintf(cpuspeed, "N/A");
 	sprintf((char *) info->label, "CPU Speed (Cur: %s MHz)", cpuspeed);
-	info->icon_path = "hello.png";
+	info->icon_path = "/usr/share/icons/pandora/cpu.png";
 	
 	info->sort_hint = 0;
 

@@ -49,7 +49,7 @@ int getinfo(PLUGIN_INFO *info) {
 			sub = malloc(sizeof(struct PLUGIN_SUBMENU));
 			sub->next = info->submenu;
 			sub->label = label[i];
-			sub->icon_path = "NO icon";
+			sub->icon_path = "/usr/share/icons/pandora/tvout.png";
 			sub->visible = 1;
 			internal = malloc(sizeof(INTERNAL));
 			internal->tvout_mode = i;
@@ -59,7 +59,7 @@ int getinfo(PLUGIN_INFO *info) {
 	}
 
 	info->label = "TV-out";
-	info->icon_path = "hello.png";
+	info->icon_path = "/usr/share/icons/pandora/tvout.png";
 	
 	info->sort_hint = 10;
 

@@ -39,11 +39,11 @@ int getinfo(PLUGIN_INFO *info) {
 	if (strstr(internal->modbuff, "wl1251") != NULL) {
 		internal->action = 0;
 		info->label = "Disable WiFi";
-		info->icon_path = "wifi_disable.png";
+		info->icon_path = "/usr/share/icons/pandora/wifi.png";
 	} else {
 		internal->action = 1;
 		info->label = "Enable WiFi";
-		info->icon_path = "wifi_disable.png";
+		info->icon_path = "/usr/share/icons/pandora/wifi.png";
 	}
 
 	info->sort_hint = 40;

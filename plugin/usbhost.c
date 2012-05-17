@@ -41,11 +41,11 @@ int getinfo(PLUGIN_INFO *info) {
 	if (strstr(internal->modbuff, "ehci_hcd") != NULL) {
 		internal->action = 0;
 		info->label = "Disable USB-host";
-		info->icon_path = "usbhost_disable.png";
+		info->icon_path = "/usr/share/icons/pandora/usb.png";
 	} else {
 		internal->action = 1;
 		info->label = "Enable USB-host";
-		info->icon_path = "usbhost_enable.png";
+		info->icon_path = "/usr/share/icons/pandora/usb.png";
 	}
 
 	info->sort_hint = 30;

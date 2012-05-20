@@ -39,11 +39,11 @@ int getinfo(PLUGIN_INFO *info) {
 	if (strstr(internal->modbuff, "hci") != NULL) {
 		internal->action = 0;
 		info->label = "Disable Bluetooth";
-		info->icon_path = "bluetooth_disable.png";
+		info->icon_path = "/usr/share/icons/pandora/bt.png";
 	} else {
 		info->label = "Enable Bluetooth";
 		internal->action = 1;
-		info->icon_path = "bluetooth_enable.png";
+		info->icon_path = "/usr/share/icons/pandora.bt.png";
 	}
 
 	info->sort_hint = 20;

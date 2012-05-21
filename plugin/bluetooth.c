@@ -43,7 +43,7 @@ int getinfo(PLUGIN_INFO *info) {
 	} else {
 		info->label = "Enable Bluetooth";
 		internal->action = 1;
-		info->icon_path = "/usr/share/icons/pandora.bt.png";
+		info->icon_path = "/usr/share/icons/pandora/bt.png";
 	}
 
 	info->sort_hint = 20;

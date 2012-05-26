@@ -14,9 +14,9 @@ int activate(void *internal) {
 	INTERNAL *ip = internal;
 
 	if (ip->action == 0) {
-		system("sudo /usr/pandora/scripts/op_bluetooth.sh");
+		system("/usr/pandora/scripts/op_bluetooth.sh");
 	} else {
-		system("sudo /usr/pandora/scripts/op_bluetooth.sh");
+		system("/usr/pandora/scripts/op_bluetooth.sh");
 	}
 
 	return 0;

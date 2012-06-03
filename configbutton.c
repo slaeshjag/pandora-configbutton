@@ -1,6 +1,34 @@
 #include "configbutton.h"
 
 
+void configbutton_MakeUsAlone() {
+	FILE *pidfile;
+	int pid_kill;
+	pid_t pid;
+
+	pid_kill = 0;
+
+	if ((pidfile = fopen("/tmp/configbutton.pid", "r")) != NULL) {
+		fscanf(pidfile, "%i", &pid_kill);
+		if (pid_kill < 1);
+		else
+			kill(pid_kill, 15);
+		fclose(pidfile);
+	}
+
+	pid = getpid();
+
+	if ((pidfile = fopen("/tmp/configbutton.pid", "w")) == NULL) {
+		fprintf(stderr, "ERROR: Unable to create /tmp/configbutton.pid\n");
+		exit(-1);
+	}
+
+	fprintf(pidfile, "%i", pid);
+	fclose(pidfile);
+
+	return;
+}
+
 
 void configbuttonActivate(GtkWidget *menu_item, gpointer data) {
 	PLUGIN_STRUCT *plugin = data;
@@ -108,6 +136,7 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
+	configbutton_MakeUsAlone();
 	gtk_init(&argc, &argv);
 	if (configbuttonInit(c) < 0)
 		return -1;

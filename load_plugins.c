@@ -113,14 +113,14 @@ int initPlugins(CONFIGBUTTON *c) {
 	c->plugins = 0;
 
 	loadPlugins(c);
-	home = getenv("HOME");
+//	home = getenv("HOME");
 
-	chdir(home);
-	if (chdir(".config-button") == 0)
-		loadPlugins(c);
+//	chdir(home);
+//	if (chdir(".config-button") == 0)
+//		loadPlugins(c);
 	
-	chdir("/usr/share/configbutton");
-	loadPlugins(c);
+//	chdir("/usr/share/configbutton");
+//	loadPlugins(c);
 
 	return 0;
 }

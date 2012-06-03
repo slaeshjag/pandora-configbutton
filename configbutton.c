@@ -2,17 +2,27 @@
 
 
 void configbutton_MakeUsAlone() {
-	FILE *pidfile;
+	FILE *pidfile, *exec;
 	int pid_kill;
 	pid_t pid;
+	char path[128];
 
 	pid_kill = 0;
 
 	if ((pidfile = fopen("/tmp/configbutton.pid", "r")) != NULL) {
 		fscanf(pidfile, "%i", &pid_kill);
 		if (pid_kill < 1);
-		else
-			kill(pid_kill, 15);
+		else {
+			sprintf(path, "/proc/%i/cmdline", pid_kill);
+			fprintf(stderr, "Opening %s...\n", path);
+			if ((exec = fopen(path, "r")) != NULL) {
+				fgets(path, 128, exec);
+				if (strstr(path, "configbutton") != NULL)
+					kill(pid_kill, 15);
+				else fprintf(stderr, "PID %i doesn't seem to be a configbutton: %s\n", pid_kill, path);
+				fclose(exec);
+			}
+		}
 		fclose(pidfile);
 	}
 
@@ -136,11 +146,11 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	configbutton_MakeUsAlone();
 	gtk_init(&argc, &argv);
 	if (configbuttonInit(c) < 0)
 		return -1;
 
+	configbutton_MakeUsAlone();
 	gtk_main();
 
 	return 0;

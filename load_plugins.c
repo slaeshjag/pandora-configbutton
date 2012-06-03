@@ -70,7 +70,6 @@ int loadPlugins(CONFIGBUTTON *c) {
 	int i, j;
 
 	dir = opendir(".");
-	c->entry = NULL;
 
 	do {
 		file = readdir(dir);
@@ -81,6 +80,7 @@ int loadPlugins(CONFIGBUTTON *c) {
 
 	/* This is a bit ugly, but I was unable to get sorting with linked lists working */
 
+	if (c->plugin != NULL) free(c->plugin);
 	if ((c->plugin = malloc(sizeof(PLUGIN_STRUCT)*c->plugins)) == NULL) {
 		c->plugins = 0;
 		return -1;
@@ -110,6 +110,7 @@ int loadPlugins(CONFIGBUTTON *c) {
 int initPlugins(CONFIGBUTTON *c) {
 	char *home;
 	c->entry = NULL;
+	c->plugin = NULL;
 	c->plugins = 0;
 
 	loadPlugins(c);

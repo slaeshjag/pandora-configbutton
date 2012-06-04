@@ -45,7 +45,8 @@ int getinfo(PLUGIN_INFO *info) {
 		internal->action = 1;
 		info->icon_path = "/usr/share/icons/pandora/bt.png";
 	}
-
+	
+	fclose(fp);
 	info->sort_hint = 20;
 
 	return 0;

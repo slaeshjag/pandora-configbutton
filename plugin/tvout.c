@@ -30,7 +30,7 @@ int activate(void *internal) {
 			system("sudo -n /usr/pandora/scripts/op_tvout.sh -d");
 			break;
 		default:		// Configure
-			system("/usr/pandora/scripts/TVoutConfig.py &");
+			system("sudo -n /usr/pandora/scripts/TVoutConfig.py &");
 			break;
 	}
 	

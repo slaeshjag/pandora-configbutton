@@ -121,6 +121,7 @@ void configbuttonSpawnMenu(GtkWidget *icon, gpointer data) {
 		configbuttonDestroyMenu(c);
 
 	configbuttonCreateMenu(c);
+	gtk_widget_queue_draw(GTK_WIDGET(c->icon));
 	gtk_menu_popup(GTK_MENU(c->menu), NULL, NULL, gtk_status_icon_position_menu, c->icon, 0, gtk_get_current_event_time());
 
 	return;

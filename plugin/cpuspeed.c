@@ -72,7 +72,6 @@ int getinfo(PLUGIN_INFO *info) {
 		max = getMaxCPU(internal);
 		step = getStep(max);
 		loops = (max - 600) / step;
-		fprintf(stderr, "%i MHz steps\n", step);
 		
 		for (i = loops; i >= 0; i--) {
 			sub = malloc(sizeof(struct PLUGIN_SUBMENU));

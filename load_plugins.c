@@ -24,7 +24,6 @@ int openPlugin(CONFIGBUTTON *c, const char *fname) {
 	sprintf(fname_dot, "./%s", fname);
 
 	if ((libhandle = dlopen(fname_dot, RTLD_NOW | RTLD_GLOBAL)) == NULL) {
-		fprintf(stderr, "Okay, %s is not a plugin\n", fname_dot);
 		return -1;
 	}
 

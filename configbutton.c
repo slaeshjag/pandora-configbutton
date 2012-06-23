@@ -66,6 +66,7 @@ void configbuttonCreateMenu(CONFIGBUTTON *c) {
 	
 	c->menu = gtk_menu_new();
 	updatePlugins(c);
+	gtk_status_icon_set_from_stock(c->icon, GTK_STOCK_PREFERENCES);
 
 	for (i = 0; i < c->plugins; i++) {
 		c->plugin[i].item = gtk_image_menu_item_new_with_label(c->plugin[i].info->label);
@@ -121,7 +122,6 @@ void configbuttonSpawnMenu(GtkWidget *icon, gpointer data) {
 		configbuttonDestroyMenu(c);
 
 	configbuttonCreateMenu(c);
-	gtk_widget_queue_draw(GTK_WIDGET(c->icon));
 	gtk_menu_popup(GTK_MENU(c->menu), NULL, NULL, gtk_status_icon_position_menu, c->icon, 0, gtk_get_current_event_time());
 
 	return;

@@ -47,6 +47,8 @@ int openPlugin(CONFIGBUTTON *c, const char *fname) {
 		return -1;
 	}
 
+	fprintf(stderr, "Found plugin '%s'\n", fname);
+
 	plugin->item = NULL;
 	plugin->info.internal = NULL;
 	plugin->info.submenu = NULL;

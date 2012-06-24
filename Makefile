@@ -1,4 +1,4 @@
-CFLAGS += `pkg-config --cflags gtk+-2.0` -Wall -O0 -g
+CFLAGS += `pkg-config --cflags gtk+-2.0` -Wall -O3
 LDFLAGS += `pkg-config --libs gtk+-2.0` -ldl
 
 default:

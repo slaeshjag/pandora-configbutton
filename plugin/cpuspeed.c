@@ -22,6 +22,22 @@ int activate(void *internal) {
 }
 
 
+int getMinCPU(INTERNAL *internal) {
+	int number;
+	char *mhz;
+
+	if ((mhz = strstr(internal->confbuff, "min:")) == NULL) {
+		fprintf(stderr, "Error: Unable to find MIN CPU-speed setting\n");
+		return 600;
+	}
+
+	mhz += 4;
+	sscanf(mhz, "%i", &number);
+
+	return (number < 600) ? 600 : number;
+}
+
+
 int getMaxCPU(INTERNAL *internal) {
 	FILE *fp;
 	int number;
@@ -46,19 +62,19 @@ int getMaxCPU(INTERNAL *internal) {
 }
 
 
-int getStep(int mhz) {
+int getStep(int mhz, int min) {
 	int i, j;
 
 //	mhz /= 25;
 
 	for (i = 1, j = mhz; j > 5; i++) 
-		j = (mhz - 600 + i * 25) / (i*25);
+		j = (mhz - min + i * 25) / (i*25);
 	return (i-1) * 25;
 }
 
 
 int getinfo(PLUGIN_INFO *info) {
-	int i, step, max, loops;
+	int i, step, max, min, loops;
 	struct PLUGIN_SUBMENU *sub;
 	char cpuspeed[10];
 	FILE *fp;
@@ -70,19 +86,20 @@ int getinfo(PLUGIN_INFO *info) {
 		info->label = malloc(128);
 		
 		max = getMaxCPU(internal);
-		step = getStep(max);
-		loops = (max - 600) / step;
+		min = getMinCPU(internal);
+		step = getStep(max, min);
+		loops = (max - min) / step;
 		
 		for (i = loops; i >= 0; i--) {
 			sub = malloc(sizeof(struct PLUGIN_SUBMENU));
 			sub->next = info->submenu;
 			nnn = malloc(32);
-			sprintf(nnn, "%i MHz", 600+i*step);
+			sprintf(nnn, "%i MHz", min + i * step);
 			sub->label = nnn;
 			sub->icon_path = "/usr/share/icons/pandora/cpu.png";
 			sub->visible = 1;
 			internal = malloc(sizeof(INTERNAL));
-			internal->setspeed = 600+i*100;
+			internal->setspeed = min + i * step;
 			sub->internal = internal;
 			info->submenu = sub;
 		}

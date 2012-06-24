@@ -65,8 +65,6 @@ int getMaxCPU(INTERNAL *internal) {
 int getStep(int mhz, int min) {
 	int i, j;
 
-//	mhz /= 25;
-
 	for (i = 1, j = mhz; j > 5; i++) 
 		j = (mhz - min + i * 25) / (i*25);
 	return (i-1) * 25;
@@ -105,6 +103,7 @@ int getinfo(PLUGIN_INFO *info) {
 		}
 		
 		sub = malloc(sizeof(struct PLUGIN_SUBMENU));
+		internal = malloc(sizeof(INTERNAL));
 		sub->next = info->submenu;
 		sub->label = "Custom";
 		sub->icon_path = "/usr/share/icons/pandora/cpu.png";

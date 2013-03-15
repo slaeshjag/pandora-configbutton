@@ -7,6 +7,7 @@ default:
 	$(CC) -o wifi.so wifi.c $(CFLAGS) -Wl,-soname,wifi.so $(LDFLAGS)
 	$(CC) -o bluetooth.so bluetooth.c $(CFLAGS) -Wl,-soname,bluetooth.so $(LDFLAGS)
 	$(CC) -o tvout.so tvout.c $(CFLAGS) -Wl,-soname,tvout.so $(LDFLAGS)
+	$(CC) -o usbmass.so usbmass.c $(CFLAGS) -Wl,-soname,usbmass.so $(LDFLAGS)
 	mv *.so bin/
 
 clean:

@@ -79,6 +79,8 @@ int loadPlugins(CONFIGBUTTON *c) {
 		openPlugin(c, file->d_name);
 	} while (1);
 
+	closedir(dir);
+
 	/* This is a bit ugly, but I was unable to get sorting with linked lists working */
 
 	if (c->plugin != NULL) free(c->plugin);

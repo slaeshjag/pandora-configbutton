@@ -41,29 +41,34 @@ int getinfo(PLUGIN_INFO *info) {
 	info->icon_path = "/usr/share/icons/pandora/usb.png";
 	info->sort_hint = 32;
 
-	if (info->submenu == NULL) {
-
-		fp = popen("sudo -n /usr/pandora/scripts/op_storage.sh list", "r");
-		if (fp != NULL) {
-			while( fscanf(fp, "%s", opPath) > 0 )
-			{
-				sub = malloc(sizeof(struct PLUGIN_SUBMENU));
-				internal = malloc(sizeof(INTERNAL));
-				sub->next = info->submenu;
-				pathStr = malloc(512);
-				strcpy(pathStr, opPath);
-				sub->label = pathStr;
-				sub->icon_path = "/usr/share/icons/pandora/usb.png";
-				sub->visible = 1;
-				strcpy(internal->path, opPath);
-				internal->action = 1;
-				sub->internal = internal;
-				info->submenu = sub;
-			}
-			fclose(fp);
-		}		
-
+	while( info->submenu != NULL )
+	{
+		sub = info->submenu;
+		info->submenu = sub->next;
+		free(sub->label);
+		free(sub->internal);
+		free(sub);
 	}
+
+	fp = popen("sudo -n /usr/pandora/scripts/op_storage.sh list", "r");
+	if (fp != NULL) {
+		while( fscanf(fp, "%s", opPath) > 0 )
+		{
+			sub = malloc(sizeof(struct PLUGIN_SUBMENU));
+			internal = malloc(sizeof(INTERNAL));
+			sub->next = info->submenu;
+			pathStr = malloc(512);
+			strcpy(pathStr, opPath);
+			sub->label = pathStr;
+			sub->icon_path = "/usr/share/icons/pandora/usb.png";
+			sub->visible = 1;
+			strcpy(internal->path, opPath);
+			internal->action = 1;
+			sub->internal = internal;
+			info->submenu = sub;
+		}
+		fclose(fp);
+	}		
 
 	return 0;
 }

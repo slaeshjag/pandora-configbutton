@@ -45,6 +45,7 @@ int getinfo(PLUGIN_INFO *info) {
 	{
 		sub = info->submenu;
 		info->submenu = sub->next;
+		free(sub->label);
 		free(sub->internal);
 		free(sub);
 	}

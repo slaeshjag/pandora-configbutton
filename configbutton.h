@@ -64,6 +64,7 @@ typedef struct {
 } CONFIGBUTTON;
 
 
+CONFIGBUTTON *cb;
 
 #include		"load_plugins.h"
 

@@ -128,6 +128,11 @@ void configbuttonSpawnMenu(GtkWidget *icon, gpointer data) {
 }
 
 
+void configbuttonSignal(int signal) {
+	configbuttonSpawnMenu(NULL, (gpointer) cb);
+}
+
+
 int configbuttonInit(CONFIGBUTTON *c) {
 	c->icon = gtk_status_icon_new_from_stock(GTK_STOCK_PREFERENCES);
 
@@ -140,15 +145,15 @@ int configbuttonInit(CONFIGBUTTON *c) {
 
 
 int main(int argc, char **argv) {
-	CONFIGBUTTON *c;
+	signal(SIGUSR1, configbuttonSignal);
 
-	if ((c = malloc(sizeof(CONFIGBUTTON))) == NULL) {
+	if ((cb = malloc(sizeof(CONFIGBUTTON))) == NULL) {
 		fprintf(stderr, "Unable to malloc(%i), probably out of RAM\n", (int) sizeof(CONFIGBUTTON));
 		return -1;
 	}
 
 	gtk_init(&argc, &argv);
-	if (configbuttonInit(c) < 0)
+	if (configbuttonInit(cb) < 0)
 		return -1;
 
 	configbutton_MakeUsAlone();

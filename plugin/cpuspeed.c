@@ -72,13 +72,16 @@ int getStep(int mhz, int min) {
 
 
 int getinfo(PLUGIN_INFO *info) {
-	int i, step, max, min, loops;
+	int i, step, max, min, loops, speed;
 	struct PLUGIN_SUBMENU *sub;
-	char cpuspeed[10];
+	char cpuspeed[10], path[520];
 	FILE *fp;
 	char *nnn;
 	INTERNAL *internal;
-	
+
+	sprintf(path, "%s/.config-button/cpu-speed.conf", getenv("HOME"));
+	fp = fopen(path, "r");
+
 	if (info->submenu == NULL) {
 		internal = malloc(sizeof(INTERNAL));
 		info->label = malloc(128);
@@ -92,12 +95,16 @@ int getinfo(PLUGIN_INFO *info) {
 			sub = malloc(sizeof(struct PLUGIN_SUBMENU));
 			sub->next = info->submenu;
 			nnn = malloc(32);
-			sprintf(nnn, "%i MHz", min + i * step);
+			if (fp)
+				fscanf(fp, "%i\n", &speed);
+			else
+				speed = min + i * step;
+			sprintf(nnn, "%i MHz", speed);
 			sub->label = nnn;
 			sub->icon_path = "/usr/share/icons/pandora/cpu.png";
 			sub->visible = 1;
 			internal = malloc(sizeof(INTERNAL));
-			internal->setspeed = min + i * step;
+			internal->setspeed = speed;
 			sub->internal = internal;
 			info->submenu = sub;
 		}
@@ -113,6 +120,8 @@ int getinfo(PLUGIN_INFO *info) {
 		info->submenu = sub;
 	}
 
+	if (fp)
+		fclose(fp);
 	fp = fopen("/proc/pandora/cpu_mhz_max", "r");
 	if (fp != NULL) {
 		fscanf(fp, "%s", cpuspeed);

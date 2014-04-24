@@ -14,6 +14,10 @@
 
 #include <sys/types.h>
 
+struct configbutton;
+#include "config.h"
+
+
 typedef struct {
 	const char		*label;
 	const char		*icon_path;
@@ -44,6 +48,8 @@ typedef struct {
 
 
 struct PLUGIN_ENTRY {
+	const char		*name;
+	int			free_name;
 	void			*library;
 	int			(*getinfo)(PLUGIN_INFO *info);
 	int			(*activate)(void *internal);
@@ -54,13 +60,15 @@ struct PLUGIN_ENTRY {
 };
 
 
-typedef struct {
+typedef struct configbutton{
 	GtkStatusIcon		*icon;
 	GtkWidget		*menu;
 	
 	struct	PLUGIN_ENTRY	*entry;
 	PLUGIN_STRUCT		*plugin;
 	int			plugins;
+
+	struct config		config;
 } CONFIGBUTTON;
 
 

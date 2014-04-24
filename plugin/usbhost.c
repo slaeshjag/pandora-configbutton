@@ -4,6 +4,8 @@
 #include <string.h>
 
 
+const char plugin_name[] = "Toggle USB-host";
+
 typedef struct {
 	char			modbuff[65536];			// 64 kB should be enough for everyone!
 	unsigned int		action;

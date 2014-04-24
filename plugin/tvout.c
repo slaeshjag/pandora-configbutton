@@ -7,6 +7,7 @@ typedef struct {
 } INTERNAL;
 
 
+const char plugin_name[] = "TV-Out settings";
 const char *label[32] = { "PAL, Main Layer", "PAL, HW Scaler", "NTSC, Main Layer", "NTSC, HW Scaler", "Disable TV-out", "Configure TV-out" };
 
 

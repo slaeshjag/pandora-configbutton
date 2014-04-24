@@ -4,6 +4,9 @@
 #include <string.h>
 
 
+const char plugin_name[] = "USB Mass storage";
+
+
 typedef struct {
 	int	action;
 	char	path[512];
@@ -45,7 +48,7 @@ int getinfo(PLUGIN_INFO *info) {
 	{
 		sub = info->submenu;
 		info->submenu = sub->next;
-		free(sub->label);
+		free((void *) sub->label);
 		free(sub->internal);
 		free(sub);
 	}

@@ -40,6 +40,14 @@ void configbutton_MakeUsAlone() {
 }
 
 
+void configbuttonSettingActivate(GtkWidget *menu_item, gpointer data) {
+	CONFIGBUTTON *c = data;
+	GtkWidget *dialog;
+
+	settingsWindowNew();
+}
+
+
 void configbuttonActivate(GtkWidget *menu_item, gpointer data) {
 	PLUGIN_STRUCT *plugin = data;
 
@@ -137,6 +145,7 @@ int configbuttonInit(CONFIGBUTTON *c) {
 	c->icon = gtk_status_icon_new_from_stock(GTK_STOCK_PREFERENCES);
 
 	g_signal_connect(G_OBJECT(c->icon), "activate", G_CALLBACK(configbuttonSpawnMenu), c);
+	g_signal_connect(G_OBJECT(c->icon), "popup-menu", G_CALLBACK(configbuttonSettingActivate), c);
 	c->menu = NULL;
 	initPlugins(c);
 
@@ -153,6 +162,7 @@ int main(int argc, char **argv) {
 	}
 
 	gtk_init(&argc, &argv);
+	configLoad((struct configbutton *) cb);
 	if (configbuttonInit(cb) < 0)
 		return -1;
 

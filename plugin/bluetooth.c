@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+const char plugin_name[] = "Toggle Bluetooth™";
 
 typedef struct {
 	char			modbuff[65536];			// 64 kB should be enough for everyone!

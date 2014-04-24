@@ -8,6 +8,8 @@ typedef struct {
 	char		confbuff[1024];
 } INTERNAL;
 
+const char plugin_name[] = "CPU speed";
+
 int activate(void *internal) {
 	char cpucmd[256];
 	INTERNAL *ip = internal;

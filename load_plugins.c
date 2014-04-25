@@ -52,6 +52,7 @@ int openPlugin(CONFIGBUTTON *c, const char *fname) {
 		plugin->name = strdup(fname), plugin->free_name = 1;
 
 	if (!configShouldLoad((struct configbutton *) c, plugin->name)) {
+		configAddFound(plugin->name, dlsym(libhandle, "plugin_desc"), 0);
 		fprintf(stderr, "Plugin %s is not in load list\n", plugin->name);
 		dlclose(plugin->library);
 		if (plugin->free_name) free((void *) plugin->name);
@@ -59,6 +60,7 @@ int openPlugin(CONFIGBUTTON *c, const char *fname) {
 		return -1;
 	}
 
+	configAddFound(plugin->name, dlsym(libhandle, "plugin_desc"), 1);
 	fprintf(stderr, "Found plugin '%s'\n", plugin->name);
 
 	plugin->item = NULL;

@@ -1,9 +1,11 @@
 #include "configbutton.h"
-
+#include <sys/stat.h>
+#include <sys/types.h>
 
 void configNew() {
 	FILE *fp;
 	char path[PATH_MAX];
+	char dir[PATH_MAX];
 
 
 	sprintf(path, "%s/.config-button/plugins-enabled", getenv("HOME"));
@@ -13,6 +15,8 @@ void configNew() {
 		return;
 	}
 
+	sprintf(dir, "%s/.config-button", getenv("HOME"));
+	mkdir(dir, 0755);
 	if (!(fp = fopen(path, "w"))) {
 		fprintf(stderr, "Unable to create %s\n", path);
 		return;
@@ -76,3 +80,39 @@ int configShouldLoad(struct configbutton *c, const char *name) {
 
 	return 0;
 }
+
+
+void configInitFound() {
+	cb->info.info = NULL;
+	cb->info.infos = 0;
+	
+	return;
+}
+
+
+void configAddFound(const char *name, const char *desc, int loaded) {
+	int id;
+	id = cb->info.infos++;
+	cb->info.info = realloc(cb->info.info, sizeof(*cb->info.info) * cb->info.infos);
+	
+	cb->info.info[id].name = strdup(name);
+	if (desc)
+		cb->info.info[id].description = strdup(desc);
+	else
+		cb->info.info[id].description = "No description available";
+	cb->info.info[id].loaded = loaded;
+
+	return;
+}
+
+
+char *configFindFound(const char *name) {
+	int i;
+	for (i = 0; i < cb->info.infos; i++) {
+		if (!strcmp(cb->info.info[i].name, name))
+			return cb->info.info[i].description;
+	}
+
+	return "Invalid plugin";
+}	
+

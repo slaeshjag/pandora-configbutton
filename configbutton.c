@@ -9,7 +9,7 @@ void configbutton_MakeUsAlone() {
 
 	pid_kill = 0;
 
-	if ((pidfile = fopen("/tmp/configbutton.pid", "r")) != NULL) {
+	if ((pidfile = fopen("/var/tmp/configbutton.pid", "r")) != NULL) {
 		fscanf(pidfile, "%i", &pid_kill);
 		if (pid_kill < 1);
 		else {
@@ -28,8 +28,8 @@ void configbutton_MakeUsAlone() {
 
 	pid = getpid();
 
-	if ((pidfile = fopen("/tmp/configbutton.pid", "w")) == NULL) {
-		fprintf(stderr, "ERROR: Unable to create /tmp/configbutton.pid\n");
+	if ((pidfile = fopen("/var/tmp/configbutton.pid", "w")) == NULL) {
+		fprintf(stderr, "ERROR: Unable to create /var/tmp/configbutton.pid\n");
 		exit(-1);
 	}
 
@@ -163,6 +163,7 @@ int main(int argc, char **argv) {
 
 	gtk_init(&argc, &argv);
 	configLoad((struct configbutton *) cb);
+	configInitFound();
 	if (configbuttonInit(cb) < 0)
 		return -1;
 

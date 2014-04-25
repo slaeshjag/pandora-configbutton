@@ -69,6 +69,7 @@ typedef struct configbutton{
 	int			plugins;
 
 	struct config		config;
+	struct config_info	info;
 } CONFIGBUTTON;
 
 

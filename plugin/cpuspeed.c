@@ -44,7 +44,8 @@ int getMaxCPU(INTERNAL *internal) {
 	FILE *fp;
 	int number;
 	char *mhz;
-
+	
+	*internal->confbuff = 0;
 	if ((fp = fopen("/etc/pandora/conf/cpu.conf", "r")) == NULL) {
 		fprintf(stderr, "Error: Unable to load /etc/pandora/conf/cpu.conf! Assuming 800 MHz...");
 		return 800;

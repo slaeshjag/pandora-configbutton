@@ -116,3 +116,29 @@ char *configFindFound(const char *name) {
 	return "Invalid plugin";
 }	
 
+
+void configSetFoundLoaded(const char *name, int loaded) {
+	int i;
+	for (i = 0; i < cb->info.infos; i++) {
+		if (!strcmp(cb->info.info[i].name, name))
+			cb->info.info[i].loaded = loaded;
+	}
+}
+
+
+void configSaveLoaded() {
+	char path[PATH_MAX];
+	int i;
+	FILE *fp;
+
+	sprintf(path, "%s/.config-button/plugins-enabled", getenv("HOME"));
+	if (!(fp = fopen(path, "w")))
+		return;
+	for (i = 0; i < cb->info.infos; i++) {
+		if (cb->info.info[i].loaded)
+			fprintf(fp, "%s\n", cb->info.info[i].name);
+	}
+
+	fclose(fp);
+	return;
+}

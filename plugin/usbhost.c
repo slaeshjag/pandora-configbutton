@@ -5,6 +5,7 @@
 
 
 const char plugin_name[] = "Toggle USB-host";
+const char plugin_desc[] = "Adds a menu for enabling/disabling the USB host port";
 
 typedef struct {
 	char			modbuff[65536];			// 64 kB should be enough for everyone!

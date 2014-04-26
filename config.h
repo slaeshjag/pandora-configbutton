@@ -23,6 +23,8 @@ int configShouldLoad(struct configbutton *c, const char *name);
 void configInitFound();
 void configAddFound(const char *name, const char *desc, int loaded);
 char *configFindFound(const char *name);
+void configSetFoundLoaded(const char *name, int loaded);
+void configSaveLoaded();
 
 
 #endif

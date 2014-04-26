@@ -1,5 +1,5 @@
 #include "configbutton.h"
-
+#include "plugin_settings.h"
 
 void configbutton_MakeUsAlone() {
 	FILE *pidfile, *exec;
@@ -41,9 +41,6 @@ void configbutton_MakeUsAlone() {
 
 
 void configbuttonSettingActivate(GtkWidget *menu_item, gpointer data) {
-	CONFIGBUTTON *c = data;
-	GtkWidget *dialog;
-
 	settingsWindowNew();
 }
 
@@ -166,8 +163,9 @@ int main(int argc, char **argv) {
 	configInitFound();
 	if (configbuttonInit(cb) < 0)
 		return -1;
-
-	configbutton_MakeUsAlone();
+	
+	if (argc >= 2 && strcmp(argv[1], "nokill"))
+		configbutton_MakeUsAlone();
 	gtk_main();
 
 	return 0;

@@ -4,6 +4,7 @@
 #include <string.h>
 
 const char plugin_name[] = "Toggle WIFI";
+const char plugin_desc[] = "Adds a menu for enabling/disabling the internal WIFI";
 
 typedef struct {
 	char			modbuff[65536];			// 64 kB should be enough for everyone!

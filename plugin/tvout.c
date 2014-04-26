@@ -8,6 +8,7 @@ typedef struct {
 
 
 const char plugin_name[] = "TV-Out settings";
+const char plugin_desc[] = "Adds a menu for selecting TV-out output mode";
 const char *label[32] = { "PAL, Main Layer", "PAL, HW Scaler", "NTSC, Main Layer", "NTSC, HW Scaler", "Disable TV-out", "Configure TV-out" };
 
 

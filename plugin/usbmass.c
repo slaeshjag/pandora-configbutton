@@ -5,6 +5,7 @@
 
 
 const char plugin_name[] = "USB Mass storage";
+const char plugin_desc[] = "Adds a menu for exporting partitions as mass storage devices over the USB OTG-port";
 
 
 typedef struct {

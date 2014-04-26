@@ -9,6 +9,7 @@ typedef struct {
 } INTERNAL;
 
 const char plugin_name[] = "CPU speed";
+const char plugin_desc[] = "Adds a menu of CPU speed presets";
 
 int activate(void *internal) {
 	char cpucmd[256];

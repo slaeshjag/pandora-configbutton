@@ -27,6 +27,7 @@ void configNew() {
 	fprintf(fp, "Toggle Bluetooth™\n");
 	fprintf(fp, "Toggle USB-host\n");
 	fprintf(fp, "USB Mass storage\n");
+	fprintf(fp, "CPU speed\n");
 
 	fclose(fp);
 }

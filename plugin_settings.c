@@ -117,7 +117,7 @@ void settingsDialogOK(GtkWidget *widget, gpointer null) {
 
 	sprintf(path, "/proc/%i/exe", getpid());
 	path_to_exec[readlink(path, path_to_exec, PATH_MAX)] = 0;
-	fprintf(stderr, "Attempting to execl %s\n", path_to_exec);
+	chdir("/");
 	execl(path_to_exec, path_to_exec, "nokill", NULL);
 	gtk_exit(0);
 	exit(0);

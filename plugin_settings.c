@@ -4,7 +4,7 @@
 static GtkWidget *plugin_disabled_list;
 static GtkWidget *plugin_enabled_list;
 static GtkWidget *plugin_description;
-static GtkWidget *win;
+static GtkWidget *win = NULL;
 
 void settingsListInit(GtkWidget *list) {
 	GtkCellRenderer *renderer;
@@ -106,6 +106,8 @@ void settingsPluginEnable(GtkWidget *widget, gpointer null) {
 
 void settingsDialogCancel(GtkWidget *widget, gpointer null) {
 	gtk_widget_destroy(win);
+	win = NULL;
+
 	return;
 }
 
@@ -147,6 +149,12 @@ void settingsWindowNew() {
 	GtkWidget *vbox, *hbox, *label, *wvbox, *wbutton;
 	GtkToolItem *button;
 	GtkWidget *toolbar;
+
+	if (win) {
+		gtk_widget_destroy(win);
+		win = NULL;
+		return;
+	}
 
 	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_container_set_border_width(GTK_CONTAINER(win), 10);

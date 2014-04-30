@@ -7,29 +7,39 @@ void configNew() {
 	char path[PATH_MAX];
 	char dir[PATH_MAX];
 
-
+	
 	sprintf(path, "%s/.config-button/plugins-enabled", getenv("HOME"));
 
 	if ((fp = fopen(path, "r"))) {
 		fclose(fp);
+	} else {
+		sprintf(dir, "%s/.config-button", getenv("HOME"));
+		mkdir(dir, 0755);
+		if (!(fp = fopen(path, "w"))) {
+			fprintf(stderr, "Unable to create %s\n", path);
+			return;
+		}
+	
+		fprintf(fp, "Toggle WIFI\n");
+		fprintf(fp, "TV-Out settings\n");
+		fprintf(fp, "Toggle Bluetooth™\n");
+		fprintf(fp, "Toggle USB-host\n");
+		fprintf(fp, "USB Mass storage\n");
+		fprintf(fp, "CPU speed\n");
+	
+		fclose(fp);
+	}
+		
+	sprintf(path, "%s/.config-button/config-icons", getenv("HOME"));
+	if ((fp = fopen(path, "r"))) {
+		fclose(fp);
+	} else {
+		if (!(fp = fopen(path, "w")))
+			return;
+		fprintf(fp, "0");
+		fclose(fp);
 		return;
 	}
-
-	sprintf(dir, "%s/.config-button", getenv("HOME"));
-	mkdir(dir, 0755);
-	if (!(fp = fopen(path, "w"))) {
-		fprintf(stderr, "Unable to create %s\n", path);
-		return;
-	}
-
-	fprintf(fp, "Toggle WIFI\n");
-	fprintf(fp, "TV-Out settings\n");
-	fprintf(fp, "Toggle Bluetooth™\n");
-	fprintf(fp, "Toggle USB-host\n");
-	fprintf(fp, "USB Mass storage\n");
-	fprintf(fp, "CPU speed\n");
-
-	fclose(fp);
 }
 
 
@@ -63,6 +73,13 @@ void configLoad(struct configbutton *c) {
 		*newbuff = 0;
 		newbuff++;
 		fprintf(stderr, "Should load %s\n", c->config.name[i]);
+	}
+
+	cb->large_icons = 0;
+	sprintf(path, "%s/.config-button/config-icons", getenv("HOME"));
+	if ((fp = fopen(path, "r"))) {
+		fscanf(fp, "%i", &cb->large_icons);
+		fclose(fp);
 	}
 	
 	return;
@@ -140,6 +157,12 @@ void configSaveLoaded() {
 			fprintf(fp, "%s\n", cb->info.info[i].name);
 	}
 
+	fclose(fp);
+
+	sprintf(path, "%s/.config-button/config-icons", getenv("HOME"));
+	if (!(fp = fopen(path, "w")))
+		return;
+	fprintf(fp, "%i", cb->large_icons);
 	fclose(fp);
 	return;
 }

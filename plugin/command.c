@@ -13,10 +13,10 @@ struct entry {
 };
 
 
-struct {
+struct internal {
 	struct entry	*entry;
 	int		entries;
-} internal;
+};
 
 
 int activate(void *internal) {
@@ -25,7 +25,23 @@ int activate(void *internal) {
 
 
 int getinfo(PLUGIN_INFO *info) {
+	struct internal *i;
+	int i;
+	char path[PATH_MAX];
+	FILE *fp;
+
+	i = info->internal;
 	if (!info->internal) {
+		sprintf(path, "%s/.config-button/commands.presets", getenv("HOME"));
+		if (!(fp = fopen(path, "r"))) {
+			fprintf(stderr, "Unable to load commands\n");
+			return -1;
+		}
+		
+
+		/* Figure out how many commands there are */
+		
+		i = malloc(sizeof(*i));
 		/* Init */
 	}
 

@@ -63,6 +63,7 @@ struct PLUGIN_ENTRY {
 typedef struct configbutton{
 	GtkStatusIcon		*icon;
 	GtkWidget		*menu;
+	int			large_icons;
 	
 	struct	PLUGIN_ENTRY	*entry;
 	PLUGIN_STRUCT		*plugin;

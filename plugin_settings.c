@@ -5,6 +5,7 @@ static GtkWidget *plugin_disabled_list;
 static GtkWidget *plugin_enabled_list;
 static GtkWidget *plugin_description;
 static GtkWidget *win = NULL;
+int show_large_icons;
 
 void settingsListInit(GtkWidget *list) {
 	GtkCellRenderer *renderer;
@@ -112,11 +113,20 @@ void settingsDialogCancel(GtkWidget *widget, gpointer null) {
 }
 
 
+void settingsIconToggle(GtkWidget *widget, gpointer null) {
+	show_large_icons = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+
+	return;
+}
+
+
 void settingsDialogOK(GtkWidget *widget, gpointer null) {
 	char path[128];
 	char path_to_exec[PATH_MAX];
+	
+	cb->large_icons = show_large_icons;
 	configSaveLoaded();
-
+	
 	sprintf(path, "/proc/%i/exe", getpid());
 	path_to_exec[readlink(path, path_to_exec, PATH_MAX)] = 0;
 	chdir("/");
@@ -227,7 +237,10 @@ void settingsWindowNew() {
 	hbox = gtk_hbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(wvbox), hbox, FALSE, FALSE, 5);
 
-	wbutton = gtk_label_new("");
+	show_large_icons = cb->large_icons;
+	wbutton = gtk_check_button_new_with_label("Show large icons");
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wbutton), show_large_icons ? TRUE : FALSE);
+	g_signal_connect(G_OBJECT(wbutton), "clicked", G_CALLBACK(settingsIconToggle), NULL);
 	gtk_box_pack_start(GTK_BOX(hbox), wbutton, TRUE, TRUE, 5);
 
 	wbutton = gtk_button_new_from_stock(GTK_STOCK_CANCEL);

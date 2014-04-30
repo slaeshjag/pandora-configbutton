@@ -1,6 +1,26 @@
 #include "configbutton.h"
 #include "plugin_settings.h"
 
+
+GtkWidget *configbuttonLoadIcon(const char *path) {
+	GtkWidget *image;
+	GdkPixbuf *pbuf;
+	int w, h;
+
+	if (cb->large_icons)
+		image = gtk_image_new_from_file(path);
+	else {
+		gtk_icon_size_lookup(gtk_tool_item_get_icon_size(gtk_toggle_tool_button_new_from_stock(GTK_STOCK_NEW)), &w, &h);
+		pbuf = gdk_pixbuf_new_from_file_at_size(path, w, h, NULL);
+		image = gtk_image_new_from_pixbuf(pbuf);
+		if (pbuf)
+			g_object_unref(pbuf);
+	}
+
+	return image;
+}
+
+
 void configbutton_MakeUsAlone() {
 	FILE *pidfile, *exec;
 	int pid_kill;
@@ -76,7 +96,7 @@ void configbuttonCreateMenu(CONFIGBUTTON *c) {
 	for (i = 0; i < c->plugins; i++) {
 		c->plugin[i].item = gtk_image_menu_item_new_with_label(c->plugin[i].info->label);
 		if (c->plugin[i].info->icon_path != NULL) {
-			image = gtk_image_new_from_file(c->plugin[i].info->icon_path);
+			image = configbuttonLoadIcon(c->plugin[i].info->icon_path);
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(c->plugin[i].item), image);
 		}
 		
@@ -92,7 +112,7 @@ void configbuttonCreateMenu(CONFIGBUTTON *c) {
 				}
 				plugin_sub->item = gtk_image_menu_item_new_with_label(plugin_sub->label);
 				if (plugin_sub->icon_path != NULL) {
-					image = gtk_image_new_from_file(plugin_sub->icon_path);
+					image = configbuttonLoadIcon(plugin_sub->icon_path);
 					gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(plugin_sub->item), image);
 				}
 				g_signal_connect(G_OBJECT(plugin_sub->item), "activate", G_CALLBACK(configbuttonActivateSubmenu), plugin_sub);

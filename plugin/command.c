@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 
 const char plugin_name[] = "Execute command";
 const char plugin_desc[] = "Adds a menu of user-defined shell commands";
 
-#define	PRIMARY_ICON	"/usr/share/icons/pandora/exec_command.png";
+#define	PRIMARY_ICON	"/usr/share/icons/pandora/exec_command.png"
 
 struct entry {
 	char		*command;
@@ -36,7 +37,7 @@ void pluginExecute(char *command) {
 int getinfo(PLUGIN_INFO *info) {
 	struct internal *in;
 	int i;
-	char path[PATH_MAX], buff_name[64], buff_icon[PATH_MAX], buff_command[2048], *r;
+	char path[PATH_MAX], buff_name[64], buff_icon[PATH_MAX], buff_command[2048];
 	FILE *fp;
 	struct PLUGIN_SUBMENU *sub;
 
@@ -45,7 +46,7 @@ int getinfo(PLUGIN_INFO *info) {
 		sprintf(path, "%s/.config-button/commands.presets", getenv("HOME"));
 		if (!(fp = fopen(path, "r"))) {
 			fprintf(stderr, "Unable to load commands\n");
-			goto build_menu;
+			return -1;
 		}
 		
 
@@ -53,19 +54,19 @@ int getinfo(PLUGIN_INFO *info) {
 		in->entry = NULL;
 		in->entries = 0;
 
-		for (i = 0; !foef(fp); i++) {
+		for (i = 0; !feof(fp); i++) {
 			*buff_name = *buff_icon = *buff_command = 0;
 			fscanf(fp, "%[^\t\n] %[^\t\n] %[^\t\n]\n", buff_name, buff_icon, buff_command);
 			if (!(*buff_name))
 				break;
 			in->entry = realloc(in->entry, (i + 1) * sizeof(*in->entry));
 			in->entries = i + 1;
-			in->entry[i].command = strcpy(buff_command);
+			in->entry[i].command = strdup(buff_command);
 			if (*buff_icon)
-				in->entry[i].icon = strcpy(buff_icon);
+				in->entry[i].icon = strdup(buff_icon);
 			else
-				in->entry[i].icon = strcpy(PRIMARY_ICON);
-			in->entry[i].name = strcpy(buff_name);
+				in->entry[i].icon = strdup(PRIMARY_ICON);
+			in->entry[i].name = strdup(buff_name);
 		}
 
 		info->internal = in;

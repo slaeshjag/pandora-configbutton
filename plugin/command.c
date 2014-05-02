@@ -24,13 +24,9 @@ struct internal {
 
 
 int activate(void *internal) {
+	system(internal);
+
 	return 0;
-}
-
-
-void pluginExecute(char *command) {
-	system(command);
-	return;
 }
 
 
@@ -83,7 +79,7 @@ int getinfo(PLUGIN_INFO *info) {
 			info->submenu->internal = in->entry[i].command;
 			info->submenu->icon_path = in->entry[i].icon;
 			info->submenu->visible = 1;
-			info->submenu->activate = pluginExecute;
+			info->submenu->activate = NULL;
 		}
 	}
 

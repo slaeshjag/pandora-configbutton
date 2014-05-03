@@ -4,6 +4,7 @@
 static GtkWidget *plugin_disabled_list;
 static GtkWidget *plugin_enabled_list;
 static GtkWidget *plugin_description;
+static GtkWidget *plugin_settings;
 static GtkWidget *win = NULL;
 int show_large_icons;
 
@@ -48,6 +49,12 @@ void settingsSelectionChanged(GtkWidget *widget, gpointer null) {
 		gtk_tree_model_get(model, &iter, 0, &value, -1);
 		sprintf(desc, "%s: %s", value, configFindFound(value));
 		gtk_label_set_text(GTK_LABEL(plugin_description), desc);
+
+		if (configFindConfig(value))
+			gtk_widget_set_sensitive(plugin_settings, TRUE);
+		else
+			gtk_widget_set_sensitive(plugin_settings, FALSE);
+
 		g_free(value);
 	}
 
@@ -67,6 +74,8 @@ void settingsRefreshList() {
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(plugin_disabled_list));
 	store = GTK_LIST_STORE(model);
 	gtk_list_store_clear(store);
+	
+	gtk_widget_set_sensitive(plugin_settings, FALSE);
 
 
 	for (i = 0; i < cb->info.infos; i++)
@@ -116,6 +125,25 @@ void settingsDialogCancel(GtkWidget *widget, gpointer null) {
 void settingsIconToggle(GtkWidget *widget, gpointer null) {
 	show_large_icons = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
 
+	return;
+}
+
+
+void settingsPreferences(GtkWidget *widget, gpointer null) {
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	char *value;
+	void (*cfg)();
+	
+	if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(gtk_tree_view_get_selection(GTK_TREE_VIEW(plugin_enabled_list))), &model, &iter)) {
+		gtk_tree_model_get(model, &iter, 0, &value, -1);
+		if (!(cfg = configFindConfig(value)))
+			gtk_widget_set_sensitive(plugin_settings, FALSE);
+		else
+			cfg();
+
+		g_free(value);
+	}
 	return;
 }
 
@@ -220,6 +248,12 @@ void settingsWindowNew() {
 	gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 5);
 	
 	settingsListAddToWindow(vbox, &plugin_enabled_list);
+
+	/* Preferences button */
+	plugin_settings = gtk_button_new_from_stock(GTK_STOCK_PREFERENCES);
+	gtk_box_pack_start(GTK_BOX(vbox), plugin_settings, FALSE, FALSE, 5);
+	g_signal_connect(G_OBJECT(plugin_settings), "clicked", G_CALLBACK(settingsPreferences), NULL);
+	gtk_widget_set_sensitive(plugin_settings, FALSE);
 
 	/* Add description label */
 	plugin_description = gtk_label_new("");

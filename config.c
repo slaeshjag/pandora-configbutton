@@ -108,12 +108,13 @@ void configInitFound() {
 }
 
 
-void configAddFound(const char *name, const char *desc, int loaded) {
+void configAddFound(const char *name, const char *desc, int loaded, void *cfg) {
 	int id;
 	id = cb->info.infos++;
 	cb->info.info = realloc(cb->info.info, sizeof(*cb->info.info) * cb->info.infos);
 	
 	cb->info.info[id].name = strdup(name);
+	cb->info.info[id].configure = cfg;
 	if (desc)
 		cb->info.info[id].description = strdup(desc);
 	else
@@ -133,6 +134,16 @@ char *configFindFound(const char *name) {
 
 	return "Invalid plugin";
 }	
+
+
+void *configFindConfig(const char *name) {
+	int i;
+	for (i = 0; i < cb->info.infos; i++) {
+		if (!strcmp(cb->info.info[i].name, name))
+			return cb->info.info[i].configure;
+	}
+	return NULL;
+}
 
 
 void configSetFoundLoaded(const char *name, int loaded) {

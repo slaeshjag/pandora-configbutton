@@ -5,6 +5,7 @@ struct config_info_entry {
 	char			*name;
 	char			*description;
 	int			loaded;
+	void			(*configure)();
 };
 
 struct config_info {
@@ -21,8 +22,9 @@ void configLoad(struct configbutton *c);
 int configShouldLoad(struct configbutton *c, const char *name);
 
 void configInitFound();
-void configAddFound(const char *name, const char *desc, int loaded);
+void configAddFound(const char *name, const char *desc, int loaded, void *cfg);
 char *configFindFound(const char *name);
+void *configFindConfig(const char *name);
 void configSetFoundLoaded(const char *name, int loaded);
 void configSaveLoaded();
 

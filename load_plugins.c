@@ -20,6 +20,7 @@ int openPlugin(CONFIGBUTTON *c, const char *fname) {
 	void *libhandle;
 	char fname_dot[256];
 	struct PLUGIN_ENTRY *plugin;
+	void *cfg;
 
 	sprintf(fname_dot, "./%s", fname);
 
@@ -52,15 +53,17 @@ int openPlugin(CONFIGBUTTON *c, const char *fname) {
 		plugin->name = strdup(fname), plugin->free_name = 1;
 
 	if (!configShouldLoad((struct configbutton *) c, plugin->name)) {
-		configAddFound(plugin->name, dlsym(libhandle, "plugin_desc"), 0);
+		cfg = dlsym(libhandle, "configure");
+		configAddFound(plugin->name, dlsym(libhandle, "plugin_desc"), 0, cfg);
 		fprintf(stderr, "Plugin %s is not in load list\n", plugin->name);
-		dlclose(plugin->library);
+		if (!cfg)
+			dlclose(plugin->library);
 		if (plugin->free_name) free((void *) plugin->name);
 		free(plugin);
 		return -1;
 	}
 
-	configAddFound(plugin->name, dlsym(libhandle, "plugin_desc"), 1);
+	configAddFound(plugin->name, dlsym(libhandle, "plugin_desc"), 1, dlsym(libhandle, "configure"));
 	fprintf(stderr, "Found plugin '%s'\n", plugin->name);
 
 	plugin->item = NULL;

@@ -105,9 +105,15 @@ int getinfo(PLUGIN_INFO *info) {
 			sub = malloc(sizeof(struct PLUGIN_SUBMENU));
 			sub->next = info->submenu;
 			nnn = malloc(32);
-			if (fp)
+			if (fp) {
+				speed = 0;
 				fscanf(fp, "%i\n", &speed);
-			else
+				if (!speed) {
+					free(nnn);
+					free(sub);
+					break;
+				}
+			} else
 				speed = min + i * step;
 			sprintf(nnn, "%i MHz", speed);
 			sub->label = nnn;

@@ -165,7 +165,6 @@ void settingsDialogOK(GtkWidget *widget, gpointer null) {
 	return;
 }
 
-
 void settingsListAddToWindow(GtkWidget *vbox, GtkWidget **list) {
 	GtkWidget *scrollwin;
 
@@ -262,7 +261,7 @@ void settingsWindowNew() {
 	settingsRefreshList();
 
 	gtk_container_add(GTK_CONTAINER(win), wvbox);
-	gtk_container_add(GTK_CONTAINER(wvbox), hbox);
+	gtk_box_pack_start(GTK_BOX(wvbox), hbox, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(wvbox), plugin_description, FALSE, FALSE, 5);
 
 	/**********************************************/

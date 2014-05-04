@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gtk/gtk.h>
 
 typedef struct {
 	int		setspeed;
@@ -13,6 +14,12 @@ const char plugin_desc[] = "Adds a menu of CPU speed presets";
 
 
 void configure() {
+	GtkWidget *d;
+
+	d = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "CPU speed config dialog not yet implemented");
+	gtk_dialog_run(GTK_DIALOG(d));
+	gtk_widget_destroy(d);
+
 	return;
 }
 

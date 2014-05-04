@@ -1,3 +1,4 @@
+CFLAGS += `pkg-config --cflags gtk+-2.0`
 CFLAGS += -O3 -Wall -fPIC -shared
 
 default:

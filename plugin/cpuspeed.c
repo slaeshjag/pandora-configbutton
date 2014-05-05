@@ -14,11 +14,24 @@ const char plugin_desc[] = "Adds a menu of CPU speed presets";
 
 
 void configure() {
-	GtkWidget *d;
+	GtkWidget *win, *vbox, *hbox;
 
+	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_widget_set_size_request(win, 600, 350);
+	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
+	gtk_window_set_title(GTK_WINDOW(win), "CPU speed settings");
+
+	hbox = gtk_hbox_new(FALSE, 0);
+	vbox = gtk_vbox_new(FALSE, 0);
+
+	gtk_widget_show_all(win);
+
+
+	#if 0
 	d = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "CPU speed config dialog not yet implemented");
 	gtk_dialog_run(GTK_DIALOG(d));
 	gtk_widget_destroy(d);
+	#endif
 
 	return;
 }

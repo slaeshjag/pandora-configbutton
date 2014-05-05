@@ -8,6 +8,36 @@ static GtkWidget *plugin_settings;
 static GtkWidget *win = NULL;
 int show_large_icons;
 
+
+void settingsAboutClose(GtkWidget *btn, gpointer window) {
+	GtkWidget *win = window;
+	gtk_widget_destroy(win);
+
+	return;
+}
+
+
+void settingsAboutInit() {
+	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	GtkWidget *hbox, *vbox, *b;
+
+	gtk_container_set_border_width(GTK_CONTAINER(window), 10);
+	gtk_widget_set_size_request(win, 400, 200);
+	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
+	gtk_window_set_title(GTK_WINDOW(win), "About configbutton");
+
+	hbox = gtk_hbox_new(FALSE, 0);
+	vbox = gtk_vbox_new(FALSE, 0);
+
+	b = gtk_label_new("Fill this in with useful information");
+	gtk_box_pack_start(GTK_BOX(vbox), b, FALSE, FALSE, 5);
+	gtk_container_add(GTK_CONTAINER(window), vbox);
+
+	gtk_widget_show_all(window);
+}
+
+
+
 void settingsListInit(GtkWidget *list) {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;

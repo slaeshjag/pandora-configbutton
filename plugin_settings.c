@@ -6,34 +6,46 @@ static GtkWidget *plugin_enabled_list;
 static GtkWidget *plugin_description;
 static GtkWidget *plugin_settings;
 static GtkWidget *win = NULL;
+static GtkWidget *about_window = NULL;
 int show_large_icons;
 
 
 void settingsAboutClose(GtkWidget *btn, gpointer window) {
 	GtkWidget *win = window;
 	gtk_widget_destroy(win);
+	about_window = NULL;
 
 	return;
 }
 
 
-void settingsAboutInit() {
-	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+void settingsAboutInit(GtkWidget *widget, gpointer null) {
 	GtkWidget *hbox, *vbox, *b;
 
-	gtk_container_set_border_width(GTK_CONTAINER(window), 10);
-	gtk_widget_set_size_request(win, 400, 200);
-	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
-	gtk_window_set_title(GTK_WINDOW(win), "About configbutton");
+	if (about_window) {
+		settingsAboutClose(NULL, about_window);
+		return;
+	}
+
+	about_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_container_set_border_width(GTK_CONTAINER(about_window), 10);
+	gtk_widget_set_size_request(about_window, 400, 200);
+	gtk_window_set_position(GTK_WINDOW(about_window), GTK_WIN_POS_CENTER);
+	gtk_window_set_title(GTK_WINDOW(about_window), "About configbutton");
 
 	hbox = gtk_hbox_new(FALSE, 0);
 	vbox = gtk_vbox_new(FALSE, 0);
 
 	b = gtk_label_new("Fill this in with useful information");
 	gtk_box_pack_start(GTK_BOX(vbox), b, FALSE, FALSE, 5);
-	gtk_container_add(GTK_CONTAINER(window), vbox);
 
-	gtk_widget_show_all(window);
+	b = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+	gtk_box_pack_start(GTK_BOX(vbox), b, FALSE, FALSE, 5);
+	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(settingsAboutClose), about_window);
+
+	gtk_container_add(GTK_CONTAINER(about_window), vbox);
+
+	gtk_widget_show_all(about_window);
 }
 
 
@@ -295,10 +307,14 @@ void settingsWindowNew() {
 	gtk_box_pack_start(GTK_BOX(wvbox), plugin_description, FALSE, FALSE, 5);
 
 	/**********************************************/
-	/********** Add apply/cancel buttons **********/
+	/********** Add about/apply/cancel buttons **********/
 
 	hbox = gtk_hbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(wvbox), hbox, FALSE, FALSE, 5);
+
+	wbutton = gtk_button_new_from_stock(GTK_STOCK_ABOUT);
+	g_signal_connect(G_OBJECT(wbutton), "clicked", G_CALLBACK(settingsAboutInit), NULL);
+	gtk_box_pack_start(GTK_BOX(hbox), wbutton, FALSE, FALSE, 5);
 
 	show_large_icons = cb->large_icons;
 	wbutton = gtk_check_button_new_with_label("Show large icons");
@@ -313,6 +329,7 @@ void settingsWindowNew() {
 	wbutton = gtk_button_new_from_stock(GTK_STOCK_OK);
 	g_signal_connect(G_OBJECT(wbutton), "clicked", G_CALLBACK(settingsDialogOK), NULL);
 	gtk_box_pack_start(GTK_BOX(hbox), wbutton, FALSE, FALSE, 5);
+	
 
 
 	gtk_widget_show_all(win);

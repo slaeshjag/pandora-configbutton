@@ -36,13 +36,28 @@ void settingsAboutInit(GtkWidget *widget, gpointer null) {
 	hbox = gtk_hbox_new(FALSE, 0);
 	vbox = gtk_vbox_new(FALSE, 0);
 
-	b = gtk_label_new("Fill this in with useful information");
+	b = gtk_image_new_from_stock(GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_DIALOG);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	
+	b = gtk_label_new("OpenPandora Configbutton");
+	gtk_label_set_line_wrap(GTK_LABEL(b), TRUE);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, TRUE, TRUE, 5);
+
+	b = gtk_label_new("A tray applet for quick access to system settings.\n\nBy Steven Arnow, 2012 - 2014. Plugins by various authors.");
+	gtk_label_set_line_wrap(GTK_LABEL(b), TRUE);
 	gtk_box_pack_start(GTK_BOX(vbox), b, FALSE, FALSE, 5);
+
+
+	hbox = gtk_hbox_new(FALSE, 0);
+	b = gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(hbox), b, TRUE, TRUE, 5);
 
 	b = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
-	gtk_box_pack_start(GTK_BOX(vbox), b, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
 	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(settingsAboutClose), about_window);
 
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 5);
 	gtk_container_add(GTK_CONTAINER(about_window), vbox);
 
 	gtk_widget_show_all(about_window);

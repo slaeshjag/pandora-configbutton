@@ -12,9 +12,12 @@ typedef struct {
 const char plugin_name[] = "CPU speed";
 const char plugin_desc[] = "Adds a menu of CPU speed presets";
 
+static GtkWidget *presets[5];
+
 
 void configure() {
 	GtkWidget *win, *vbox, *hbox;
+	int i;
 
 	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_widget_set_size_request(win, 600, 350);
@@ -23,6 +26,13 @@ void configure() {
 
 	hbox = gtk_hbox_new(FALSE, 0);
 	vbox = gtk_vbox_new(FALSE, 0);
+
+	for (i = 0; i < 5; i++) {
+		presets[i] = gtk_entry_new();
+		gtk_box_pack_start(GTK_BOX(vbox), presets[i], FALSE, FALSE, 5);
+	}
+		
+	gtk_container_add(GTK_CONTAINER(win), vbox);
 
 	gtk_widget_show_all(win);
 

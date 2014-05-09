@@ -6,8 +6,12 @@
 
 typedef struct {
 	int		setspeed;
-	char		confbuff[1024];
 } INTERNAL;
+
+static void read_values();
+
+static int		values[5];
+static char		confbuff[1024];
 
 const char plugin_name[] = "CPU speed";
 const char plugin_desc[] = "Adds a menu of CPU speed presets";
@@ -16,22 +20,39 @@ static GtkWidget *presets[5];
 
 
 void configure() {
-	GtkWidget *win, *vbox, *hbox;
+	GtkWidget *win, *vbox, *hbox, *b;
 	int i;
 
+	read_values();
 	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_widget_set_size_request(win, 600, 350);
 	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(win), "CPU speed settings");
 
-	hbox = gtk_hbox_new(FALSE, 0);
 	vbox = gtk_vbox_new(FALSE, 0);
 
 	for (i = 0; i < 5; i++) {
-		presets[i] = gtk_entry_new();
-		gtk_box_pack_start(GTK_BOX(vbox), presets[i], FALSE, FALSE, 5);
+		hbox = gtk_hbox_new(FALSE, 0);
+		gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 5);
+		presets[i] = gtk_spin_button_new_with_range(0., 5000., 1.);
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(presets[i]), values[i]);
+		gtk_box_pack_start(GTK_BOX(hbox), presets[i], TRUE, TRUE, 5);
+		b = gtk_label_new("MHz");
+		gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
 	}
-		
+	
+	hbox = gtk_hbox_new(FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 5);
+	b = gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(hbox), b, TRUE, TRUE, 5);
+	b = gtk_button_new_from_stock(GTK_STOCK_REVERT_TO_SAVED);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	b = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	b = gtk_button_new_from_stock(GTK_STOCK_OK);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+
+	
+
 	gtk_container_add(GTK_CONTAINER(win), vbox);
 
 	gtk_widget_show_all(win);
@@ -61,11 +82,11 @@ int activate(void *internal) {
 }
 
 
-int getMinCPU(INTERNAL *internal) {
+int getMinCPU() {
 	int number;
 	char *mhz;
 
-	if ((mhz = strstr(internal->confbuff, "min:")) == NULL) {
+	if ((mhz = strstr(confbuff, "min:")) == NULL) {
 		fprintf(stderr, "Error: Unable to find MIN CPU-speed setting\n");
 		return 600;
 	}
@@ -77,21 +98,21 @@ int getMinCPU(INTERNAL *internal) {
 }
 
 
-int getMaxCPU(INTERNAL *internal) {
+int getMaxCPU() {
 	FILE *fp;
 	int number;
 	char *mhz;
 	
-	*internal->confbuff = 0;
+	*confbuff = 0;
 	if ((fp = fopen("/etc/pandora/conf/cpu.conf", "r")) == NULL) {
 		fprintf(stderr, "Error: Unable to load /etc/pandora/conf/cpu.conf! Assuming 800 MHz...");
 		return 800;
 	}
 
-	internal->confbuff[fread(internal->confbuff, 1, 1024, fp)] = 0;
+	confbuff[fread(confbuff, 1, 1024, fp)] = 0;
 	fclose(fp);
 
-	if ((mhz = strstr(internal->confbuff, "max:")) == NULL) {
+	if ((mhz = strstr(confbuff, "max:")) == NULL) {
 		fprintf(stderr, "Unable to find MAX CPU-speed setting\n");
 		return 800;
 	}
@@ -111,46 +132,60 @@ int getStep(int mhz, int min) {
 }
 
 
+static void read_values() {
+	int min, max, loops, speed, step, i;
+	char path[520];
+	FILE *fp;
+	
+	sprintf(path, "%s/.config-button/cpu-speed.conf", getenv("HOME"));
+	fp = fopen(path, "r");
+	
+	max = getMaxCPU();
+	min = getMinCPU();
+	step = getStep(max, min);
+	loops = (max - min) / step;
+	
+	for (i = loops; i >= 0; i--) {
+		if (fp) {
+			speed = 0;
+			fscanf(fp, "%i\n", &speed);
+		} else
+			speed = min + i * step;
+		values[i] = speed;
+	}
+
+	if (fp)
+		fclose(fp);
+	return;
+}
+
+
 int getinfo(PLUGIN_INFO *info) {
-	int i, step, max, min, loops, speed;
+	int i;
 	struct PLUGIN_SUBMENU *sub;
-	char cpuspeed[10], path[520];
+	char cpuspeed[10];
 	FILE *fp;
 	char *nnn;
 	INTERNAL *internal;
 
-	sprintf(path, "%s/.config-button/cpu-speed.conf", getenv("HOME"));
-	fp = fopen(path, "r");
-
 	if (info->submenu == NULL) {
+		read_values();
 		internal = malloc(sizeof(INTERNAL));
 		info->label = malloc(128);
 		
-		max = getMaxCPU(internal);
-		min = getMinCPU(internal);
-		step = getStep(max, min);
-		loops = (max - min) / step;
-		
-		for (i = loops; i >= 0; i--) {
+		for (i = 4; i >= 0; i--) {
+			if (!values[i])
+				continue;
 			sub = malloc(sizeof(struct PLUGIN_SUBMENU));
 			sub->next = info->submenu;
 			nnn = malloc(32);
-			if (fp) {
-				speed = 0;
-				fscanf(fp, "%i\n", &speed);
-				if (!speed) {
-					free(nnn);
-					free(sub);
-					break;
-				}
-			} else
-				speed = min + i * step;
-			sprintf(nnn, "%i MHz", speed);
+			
+			sprintf(nnn, "%i MHz", values[i]);
 			sub->label = nnn;
 			sub->icon_path = "/usr/share/icons/pandora/cpu.png";
 			sub->visible = 1;
 			internal = malloc(sizeof(INTERNAL));
-			internal->setspeed = speed;
+			internal->setspeed = values[i];
 			sub->internal = internal;
 			info->submenu = sub;
 		}
@@ -166,8 +201,6 @@ int getinfo(PLUGIN_INFO *info) {
 		info->submenu = sub;
 	}
 
-	if (fp)
-		fclose(fp);
 	fp = fopen("/proc/pandora/cpu_mhz_max", "r");
 	if (fp != NULL) {
 		fscanf(fp, "%s", cpuspeed);

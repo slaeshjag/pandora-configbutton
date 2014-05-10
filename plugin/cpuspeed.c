@@ -19,6 +19,11 @@ const char plugin_desc[] = "Adds a menu of CPU speed presets";
 static GtkWidget *presets[5];
 
 
+static void saveSpeeds(GtkWidget *w, gpointer null) {
+	fprintf(stderr, "TODO: implement\n");
+}
+
+
 void configure() {
 	GtkWidget *win, *vbox, *hbox, *b;
 	int i;
@@ -50,6 +55,7 @@ void configure() {
 	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
 	b = gtk_button_new_from_stock(GTK_STOCK_OK);
 	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(saveSpeeds), NULL);
 
 	
 

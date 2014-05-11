@@ -17,15 +17,42 @@ const char plugin_name[] = "CPU speed";
 const char plugin_desc[] = "Adds a menu of CPU speed presets";
 
 static GtkWidget *presets[5];
+static GtkWidget *win;
 
 
 static void saveSpeeds(GtkWidget *w, gpointer null) {
-	fprintf(stderr, "TODO: implement\n");
+	int i, v;
+	char path[520];
+	FILE *fp;
+	
+	sprintf(path, "%s/.config-button/cpu-speed.conf", getenv("HOME"));
+	fp = fopen(path, "w");
+
+	for (i = 0; i < 5; i++) {
+		v = gtk_spin_button_get_value(GTK_SPIN_BUTTON(presets[i]));
+		if (v)
+			fprintf(fp, "%i\n", v);
+	}
+
+	fclose(fp);
+	gtk_widget_destroy(win);
+}
+
+static void closeWindow(GtkWidget *w, gpointer null) {
+	gtk_widget_destroy(win);
+}
+	
+
+static void revertSpeeds(GtkWidget *w, gpointer null) {
+	int i;
+	for (i = 0; i < 5; i++) {
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(presets[i]), values[i]);
+	}
 }
 
 
 void configure() {
-	GtkWidget *win, *vbox, *hbox, *b;
+	GtkWidget *vbox, *hbox, *b;
 	int i;
 
 	read_values();
@@ -34,6 +61,10 @@ void configure() {
 	gtk_window_set_title(GTK_WINDOW(win), "CPU speed settings");
 
 	vbox = gtk_vbox_new(FALSE, 0);
+	b = gtk_label_new("Entries set to 0 will not be displayed");
+	gtk_label_set_line_wrap(GTK_LABEL(b), TRUE);
+	gtk_box_pack_start(GTK_BOX(vbox), b, FALSE, FALSE, 5);
+
 
 	for (i = 0; i < 5; i++) {
 		hbox = gtk_hbox_new(FALSE, 0);
@@ -51,8 +82,10 @@ void configure() {
 	gtk_box_pack_start(GTK_BOX(hbox), b, TRUE, TRUE, 5);
 	b = gtk_button_new_from_stock(GTK_STOCK_REVERT_TO_SAVED);
 	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(revertSpeeds), NULL);
 	b = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
 	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(closeWindow), NULL);
 	b = gtk_button_new_from_stock(GTK_STOCK_OK);
 	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
 	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(saveSpeeds), NULL);
@@ -151,7 +184,7 @@ static void read_values() {
 	step = getStep(max, min);
 	loops = (max - min) / step;
 	
-	for (i = loops; i >= 0; i--) {
+	for (i = 0; i < loops; i++) {
 		if (fp) {
 			speed = 0;
 			fscanf(fp, "%i\n", &speed);

@@ -1,4 +1,5 @@
 #include "../include/configbutton.h"
+#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +10,7 @@ const char plugin_name[] = "Execute command";
 const char plugin_desc[] = "Adds a menu of user-defined shell commands";
 
 #define	PRIMARY_ICON	"/usr/share/icons/pandora/exec_command.png"
+static GtkWidget *win;
 
 struct entry {
 	char		*command;
@@ -27,6 +29,16 @@ int activate(void *internal) {
 	system(internal);
 
 	return 0;
+}
+
+
+void configure() {
+	/* TODO: load in commands */
+	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
+	gtk_window_set_title(GTK_WINDOW(win), "Execute command settings - Config tray");
+
+	gtk_widget_show_all(win);
 }
 
 

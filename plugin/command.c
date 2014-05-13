@@ -10,7 +10,7 @@ const char plugin_name[] = "Execute command";
 const char plugin_desc[] = "Adds a menu of user-defined shell commands";
 
 #define	PRIMARY_ICON	"/usr/share/icons/pandora/exec_command.png"
-static GtkWidget *win;
+static GtkWidget *win, list;
 
 struct entry {
 	char		*command;
@@ -29,6 +29,36 @@ int activate(void *internal) {
 	system(internal);
 
 	return 0;
+}
+
+static void init_list(GtkWidget *list) {
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GtkListStore *store;
+
+	renderer = gtk_cell_renderer_text_new();
+	column = gtk_tree_view_column_new_with_attributes("Plugins", renderer, "text", 0, NULL);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
+
+	store = gtk_list_store_new(1, G_TYPE_STRING);
+	gtk_tree_view_set_model(GTK_TREE_VIEW(list), GTK_TREE_MODEL(store));
+
+	g_object_unref(store);
+
+	return;
+}
+
+
+void settingsListAdd(GtkWidget *list, const gchar *str) {
+	GtkListStore *store;
+	GtkTreeIter iter;
+
+	store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(list)));
+
+	gtk_list_store_append(store, &iter);
+	gtk_list_store_set(store, &iter, 0, str, -1);
+
+	return;
 }
 
 

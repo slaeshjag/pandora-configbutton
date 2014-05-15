@@ -10,7 +10,7 @@ const char plugin_name[] = "Execute command";
 const char plugin_desc[] = "Adds a menu of user-defined shell commands";
 
 #define	PRIMARY_ICON	"/usr/share/icons/pandora/exec_command.png"
-static GtkWidget *win, list;
+static GtkWidget *win, *list;
 
 struct entry {
 	char		*command;
@@ -31,13 +31,14 @@ int activate(void *internal) {
 	return 0;
 }
 
+
 static void init_list(GtkWidget *list) {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	GtkListStore *store;
 
 	renderer = gtk_cell_renderer_text_new();
-	column = gtk_tree_view_column_new_with_attributes("Plugins", renderer, "text", 0, NULL);
+	column = gtk_tree_view_column_new_with_attributes("Commands", renderer, "text", 0, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(list), column);
 
 	store = gtk_list_store_new(1, G_TYPE_STRING);
@@ -49,7 +50,7 @@ static void init_list(GtkWidget *list) {
 }
 
 
-void settingsListAdd(GtkWidget *list, const gchar *str) {
+void list_add(GtkWidget *list, const gchar *str) {
 	GtkListStore *store;
 	GtkTreeIter iter;
 
@@ -57,16 +58,44 @@ void settingsListAdd(GtkWidget *list, const gchar *str) {
 
 	gtk_list_store_append(store, &iter);
 	gtk_list_store_set(store, &iter, 0, str, -1);
+}
+
+
+void list_updated(GtkWidget *widget, gpointer null) {
+	return;
+}
+
+
+static void new_list(GtkWidget *vbox, GtkWidget **list) {
+	GtkWidget *scrollwin;
+
+	scrollwin = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	*list = gtk_tree_view_new();
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(*list), FALSE);
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), *list);
+	gtk_box_pack_start(GTK_BOX(vbox), scrollwin, TRUE, TRUE, 5);
+
+	g_signal_connect(gtk_tree_view_get_selection(GTK_TREE_VIEW((*list))), "changed", G_CALLBACK(list_updated), NULL);
 
 	return;
 }
 
 
 void configure() {
+	GtkWidget *wvbox;
 	/* TODO: load in commands */
 	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(win), "Execute command settings - Config tray");
+	
+	wvbox = gtk_vbox_new(FALSE, 0);
+	gtk_container_add(GTK_CONTAINER(win), wvbox);
+
+	new_list(wvbox, &list);
+	init_list(list);
+
+
 
 	gtk_widget_show_all(win);
 }

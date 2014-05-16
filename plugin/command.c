@@ -10,7 +10,7 @@ const char plugin_name[] = "Execute command";
 const char plugin_desc[] = "Adds a menu of user-defined shell commands";
 
 #define	PRIMARY_ICON	"/usr/share/icons/pandora/exec_command.png"
-static GtkWidget *win, *list;
+static GtkWidget *win, *list, *cmd, *icon, *name;
 
 struct entry {
 	char		*command;
@@ -83,19 +83,28 @@ static void new_list(GtkWidget *vbox, GtkWidget **list) {
 
 
 void configure() {
-	GtkWidget *wvbox;
+	GtkWidget *whbox, *table;
 	/* TODO: load in commands */
 	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(win), "Execute command settings - Config tray");
 	
-	wvbox = gtk_vbox_new(FALSE, 0);
-	gtk_container_add(GTK_CONTAINER(win), wvbox);
-
-	new_list(wvbox, &list);
+	whbox = gtk_hbox_new(FALSE, 0);
+	gtk_container_add(GTK_CONTAINER(win), whbox);
+	
+	new_list(whbox, &list);
 	init_list(list);
+	
+	table = gtk_table_new(2, 4, TRUE);
+	gtk_table_set_row_spacings(GTK_TABLE(table), 2);
+	gtk_table_set_col_spacings(GTK_TABLE(table), 2);
+	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Name"), 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Icon"), 0, 1, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Command"), 0, 1, 2, 3);
+	gtk_box_pack_start(GTK_BOX(whbox), table, FALSE, FALSE, 5);
 
 
+	
 
 	gtk_widget_show_all(win);
 }

@@ -94,13 +94,20 @@ void configure() {
 	
 	new_list(whbox, &list);
 	init_list(list);
+	name = gtk_entry_new();
+	icon = gtk_file_chooser_button_new("Select icon", GTK_FILE_CHOOSER_ACTION_OPEN);
+	cmd = gtk_entry_new();
 	
-	table = gtk_table_new(2, 4, TRUE);
+	table = gtk_table_new(4, 2, TRUE);
+	gtk_table_set_homogeneous(GTK_TABLE(table), FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(table), 2);
 	gtk_table_set_col_spacings(GTK_TABLE(table), 2);
 	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Name"), 0, 1, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(table), name, 1, 2, 0, 1);
 	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Icon"), 0, 1, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(table), icon, 1, 2, 1, 2);
 	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Command"), 0, 1, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(table), cmd, 1, 2, 2, 3);
 	gtk_box_pack_start(GTK_BOX(whbox), table, FALSE, FALSE, 5);
 
 

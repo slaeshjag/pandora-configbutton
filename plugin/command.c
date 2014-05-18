@@ -83,7 +83,7 @@ static void new_list(GtkWidget *vbox, GtkWidget **list) {
 
 
 void configure() {
-	GtkWidget *whbox, *table;
+	GtkWidget *whbox, *table, *vbox, hbox;
 	/* TODO: load in commands */
 	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
@@ -97,20 +97,22 @@ void configure() {
 	name = gtk_entry_new();
 	icon = gtk_file_chooser_button_new("Select icon", GTK_FILE_CHOOSER_ACTION_OPEN);
 	cmd = gtk_entry_new();
+	vbox = gtk_vbox_new(FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(whbox), vbox, FALSE, FALSE, 0);
 	
-	table = gtk_table_new(4, 2, TRUE);
+	table = gtk_table_new(3, 2, TRUE);
 	gtk_table_set_homogeneous(GTK_TABLE(table), FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(table), 2);
 	gtk_table_set_col_spacings(GTK_TABLE(table), 2);
-	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Name"), 0, 1, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(table), name, 1, 2, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Icon"), 0, 1, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(table), icon, 1, 2, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(table), gtk_label_new("Command"), 0, 1, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(table), cmd, 1, 2, 2, 3);
-	gtk_box_pack_start(GTK_BOX(whbox), table, FALSE, FALSE, 5);
+	gtk_table_attach(GTK_TABLE(table), gtk_label_new("Name"), 0, 1, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), name, 1, 2, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), gtk_label_new("Icon"), 0, 1, 1, 2, GTK_SHRINK, GTK_SHRINK, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), icon, 1, 2, 1, 2, GTK_FILL, GTK_SHRINK, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), gtk_label_new("Command"), 0, 1, 2, 3, GTK_SHRINK, GTK_SHRINK, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), cmd, 1, 2, 2, 3, GTK_SHRINK, GTK_SHRINK, 0, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, FALSE, 5);
 
-
+	/* TODO: Add buttons for Add/Remove/Apply */
 	
 
 	gtk_widget_show_all(win);

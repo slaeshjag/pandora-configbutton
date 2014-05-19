@@ -83,7 +83,7 @@ static void new_list(GtkWidget *vbox, GtkWidget **list) {
 
 
 void configure() {
-	GtkWidget *whbox, *table, *vbox, hbox;
+	GtkWidget *whbox, *table, *vbox, *hbox, *b;
 	/* TODO: load in commands */
 	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER);
@@ -111,6 +111,16 @@ void configure() {
 	gtk_table_attach(GTK_TABLE(table), gtk_label_new("Command"), 0, 1, 2, 3, GTK_SHRINK, GTK_SHRINK, 0, 0);
 	gtk_table_attach(GTK_TABLE(table), cmd, 1, 2, 2, 3, GTK_SHRINK, GTK_SHRINK, 0, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, FALSE, 5);
+	
+	hbox = gtk_hbox_new(FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 5);
+	b = gtk_button_new_from_stock("gtk-apply");
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	b = gtk_button_new_from_stock("gtk-add");
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	b = gtk_button_new_from_stock("gtk-remove");
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+
 
 	/* TODO: Add buttons for Add/Remove/Apply */
 	

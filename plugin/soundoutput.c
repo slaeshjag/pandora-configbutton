@@ -211,6 +211,8 @@ int activate(void *internal)
 	{
 		sprintf(buffer,"%s/pas.sh -o %s",pas_path,ip->name);
 		system(buffer);
+		sprintf(buffer,"notify-send -i /usr/share/icons/elementary/devices/48/audiocard.svg \"Sound Control\" \"%s was enabled\"",ip->name);
+		system(buffer);
 		sprintf(recent_device,"%s",ip->name);
 	}
 	return 0;

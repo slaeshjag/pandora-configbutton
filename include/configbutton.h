@@ -12,13 +12,13 @@ typedef struct {
 
 
 struct PLUGIN_SUBMENU {
-	void				*gtkmenuentry; // Don't touch this inside the plugin
-	const char			*label;
-	void				*internal;
-	const char			*icon_path;
-	int				visible;
-	struct PLUGIN_SUBMENU		*next;
-	void				*activate;
+	void					*gtkmenuentry; // Don't touch this inside the plugin
+	char					*label;
+	void					*internal;
+	const char				*icon_path;
+	int						visible;
+	struct PLUGIN_SUBMENU	*next;
+	void					*activate;
 };
 
 	

@@ -145,7 +145,7 @@ static void applyPath(GtkWidget *b, gpointer *e)
 	else
 	{
 		extract_pas(pas_path);
-		messageBox( "Created \"pas.h\" at location" );
+		messageBox( "Created \"pas.sh\" at location" );
 	}
 
 }

@@ -488,6 +488,8 @@ void configure()
 	vbox = gtk_vbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(win), vbox);
 	b = gtk_label_new("Path to \"pas.sh\". If the folder does not contain \"pas.sh\", version 0.4 will be installed in it.");
+	gtk_label_set_line_wrap(GTK_LABEL(b), TRUE);
+	gtk_widget_set_size_request( b, 400, -1);
 	gtk_box_pack_start(GTK_BOX(vbox), b, FALSE, FALSE, 5);
 	
 	hbox = gtk_hbox_new(FALSE, 0);
@@ -496,7 +498,7 @@ void configure()
 	gtk_box_pack_start(GTK_BOX(hbox), e, FALSE, FALSE, 5);
 	gtk_entry_set_text(GTK_ENTRY(e), pas_path );
 	gtk_entry_set_max_length(GTK_ENTRY(e), 520 );
-	gtk_entry_set_width_chars(GTK_ENTRY(e), 44 );
+	gtk_entry_set_width_chars(GTK_ENTRY(e), 35 );
 	b = gtk_button_new_from_stock(GTK_STOCK_APPLY);
 	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
 	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(applyPath), e);

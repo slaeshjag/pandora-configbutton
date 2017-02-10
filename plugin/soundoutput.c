@@ -47,6 +47,50 @@ static void cleanDevices(pDevice *first)
 	}
 }
 
+#define CHECK_AND_ADD_MACRO(s) \
+	if (strstr(buffer,s) == NULL) \
+	{ \
+		sprintf(&(enable[l]),s","); \
+		l = strlen(enable); \
+	}
+
+#define SUDO_MESSAGE "The sound output plugin needs super user rights to setup the audio environment."
+
+static void checkGlobalSettings()
+{
+	char buffer[1024];
+	char enable[1024];
+	FILE* p;
+	int l = 0;
+	sprintf(buffer," cat /etc/bluetooth/audio.conf | grep \"Enable=\"");
+	p = popen(buffer, "r");
+	buffer[fread(buffer, 1, 1024, p)] = 0;
+	pclose(p);
+	CHECK_AND_ADD_MACRO("Source")
+	CHECK_AND_ADD_MACRO("Sink")
+	CHECK_AND_ADD_MACRO("Headset")
+	CHECK_AND_ADD_MACRO("Socket")
+	CHECK_AND_ADD_MACRO("Control")
+	if (enable[0])
+	{
+		sprintf(buffer,"gksudo --message \""SUDO_MESSAGE"\" \"sed -i.soundoutput.backup 's/Enable=/Enable=%s/' /etc/bluetooth/audio.conf\"",enable);
+		system(buffer);
+	}
+	sprintf(buffer,"cat /usr/share/alsa/alsa.conf | grep -q \"~/.asoundrc\"");
+	if (system(buffer) == 0)
+	{
+		sprintf(buffer,"gksudo --message \""SUDO_MESSAGE"\" \"sed -i.soundoutput.backup 's,~/.asoundrc,/home/\\${USER}/.asoundrc,' /usr/share/alsa/alsa.conf\"");
+		system(buffer);
+	}
+	p = fopen("/etc/asound.conf", "r");
+	if (p)
+	{
+		fclose(p);
+		sprintf(buffer,"gksudo --message \""SUDO_MESSAGE"\" \"mv /etc/asound.conf /etc/asound.conf.soundoutput.backup\"");
+		system(buffer);
+	}
+}
+
 int prefix(const char *pre, const char *str)
 {
     return strncmp(pre, str, strlen(pre)) == 0;
@@ -338,6 +382,7 @@ gboolean view_selection_func(
 
 static void addDeviceDialog(GtkWidget *w, gpointer null)
 {
+	checkGlobalSettings();
 	GtkWidget *win_add, *vbox, *hbox, *b, *sbox;
 	GtkCellRenderer *renderer;
 	GtkTreeIter iter;
@@ -480,6 +525,7 @@ void set_pas_path()
 
 void configure()
 {
+	checkGlobalSettings();
 	set_pas_path();
 	GtkWidget *vbox, *hbox, *b, *e, *subvbox, *sbox;
 	GtkCellRenderer *renderer;

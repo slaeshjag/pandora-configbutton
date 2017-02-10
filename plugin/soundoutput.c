@@ -270,7 +270,11 @@ static void addDevice(GtkWidget *b, gpointer *__window)
 	if (strchr(name,' '))
 		sprintf(buffer,"Device name \"%s\" not alowed because of spaces!",name);
 	if (strchr(name,'\"'))
-		sprintf(buffer,"Device name \"%s\" not alowed because of \"!",name);
+		sprintf(buffer,"Device name \"%s\" not alowed because of quotes!",name);
+	if (strchr(name,'(') || strchr(name,')'))
+		sprintf(buffer,"Device name \"%s\" not alowed because of parantheses!",name);
+	if (strchr(name,'*'))
+		sprintf(buffer,"Device name \"%s\" not alowed because of asterisks!",name);
 	if (buffer[0])
 	{
 		d = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, buffer);
@@ -320,7 +324,9 @@ gboolean view_selection_func(
 		gtk_tree_model_get(model, &iter, 1, &name, -1);
 		int i;
 		for (i=0;name[i];++i)
-			if (name[i] == ' ' || name[i] == '\"')
+			if (name[i] == ' ' || name[i] == '\"' ||
+				name[i] == '(' || name[i] == ')'  ||
+				name[i] == '*')
 				name[i] = '_';
 		gtk_entry_set_text(GTK_ENTRY(add_mac), mac );
 		gtk_entry_set_text(GTK_ENTRY(add_name), name );

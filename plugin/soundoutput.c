@@ -94,6 +94,16 @@ static void checkGlobalSettings()
 	}
 }
 
+void useDevice(const char* name)
+{
+	char buffer[1024];
+	sprintf(buffer,"%s/pas.sh -o %s",pas_path,name);
+	system(buffer);
+	sprintf(buffer,"notify-send -i /usr/share/icons/elementary/devices/48/audiocard.svg \"Sound Output:\n%s was enabled\"",name);
+	system(buffer);
+	sprintf(recent_device,"%s",name);
+}
+
 int prefix(const char *pre, const char *str)
 {
     return strncmp(pre, str, strlen(pre)) == 0;
@@ -333,6 +343,10 @@ static void addDevice(GtkWidget *b, gpointer *__window)
 	char cmd[1024];
 	sprintf(cmd, "sed 's/device \"XX:XX:XX:XX:XX:XX\"/device \"%s\"/'  %s/.asoundrc_bt > %s/.asoundrc_%s", mac, pas_path, pas_path, name );
 	system(cmd);
+
+	if (strcmp(gtk_button_get_label( GTK_BUTTON(b) ), "Add and _Use" ) == 0)
+		useDevice(name);
+
 	updateDevices(1);
 	gtk_widget_destroy(GTK_WIDGET(window));
 }
@@ -394,7 +408,7 @@ static void addDeviceDialog(GtkWidget *w, gpointer null)
 	gtk_window_set_position(GTK_WINDOW(win_add), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(win_add), "Add new (bluetooth) device");
 	gtk_window_set_modal(GTK_WINDOW(win_add),TRUE);
-	gtk_window_set_default_size(GTK_WINDOW(win_add),-1,300);
+	gtk_window_set_default_size(GTK_WINDOW(win_add),400,350);
 
 	vbox = gtk_vbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(win_add), vbox);
@@ -409,15 +423,9 @@ static void addDeviceDialog(GtkWidget *w, gpointer null)
 	gtk_entry_set_text(GTK_ENTRY(add_mac), "XX:XX:XX:XX:XX:XX" );
 	gtk_entry_set_max_length(GTK_ENTRY(add_mac), 17 );
 	add_name = gtk_entry_new();
-	gtk_box_pack_start(GTK_BOX(hbox), add_name, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(hbox), add_name, TRUE, TRUE, 5);
 	gtk_entry_set_text(GTK_ENTRY(add_name), "name" );
 	gtk_entry_set_max_length(GTK_ENTRY(add_mac), 64 );
-	b = gtk_button_new_from_stock(GTK_STOCK_ADD);
-	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(addDevice), win_add);
-	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
-	b = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
-	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
-	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(closeWindow), win_add);
 
 	sbox = gtk_scrolled_window_new(NULL, NULL);
 	gtk_box_pack_start(GTK_BOX(vbox), sbox, TRUE, TRUE, 5);
@@ -453,6 +461,22 @@ static void addDeviceDialog(GtkWidget *w, gpointer null)
 	cleanDevices(&first_bt);
 	gtk_tree_view_set_model( GTK_TREE_VIEW( hbox ), GTK_TREE_MODEL( model ) );
 	gtk_tree_selection_set_select_function(gtk_tree_view_get_selection(GTK_TREE_VIEW(hbox)), view_selection_func, NULL, NULL);	
+
+	hbox = gtk_hbox_new(FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 5);
+	b = gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(hbox), b, TRUE, TRUE, 5);
+	b = gtk_button_new_from_stock(GTK_STOCK_ADD);
+	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(addDevice), win_add);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	b = gtk_button_new_with_mnemonic("Add and _Use");
+	gtk_button_set_image(GTK_BUTTON(b), gtk_image_new_from_stock( GTK_STOCK_ADD, GTK_ICON_SIZE_BUTTON ) );
+	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(addDevice), win_add);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	b = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+	gtk_box_pack_start(GTK_BOX(hbox), b, FALSE, FALSE, 5);
+	g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(closeWindow), win_add);
+
 	gtk_widget_show_all(win_add);
 }
 
@@ -620,11 +644,7 @@ int activate(void *internal)
 	}
 	else
 	{
-		sprintf(buffer,"%s/pas.sh -o %s",pas_path,ip->name);
-		system(buffer);
-		sprintf(buffer,"notify-send -i /usr/share/icons/elementary/devices/48/audiocard.svg \"Sound Control\" \"%s was enabled\"",ip->name);
-		system(buffer);
-		sprintf(recent_device,"%s",ip->name);
+		useDevice(ip->name);
 	}
 	return 0;
 }

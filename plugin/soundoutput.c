@@ -59,7 +59,7 @@ static void cleanDevices(pDevice *first)
 static void checkGlobalSettings()
 {
 	char buffer[1024];
-	char enable[1024];
+	char enable[1024] = "";
 	FILE* p;
 	int l = 0;
 	sprintf(buffer," cat /etc/bluetooth/audio.conf | grep \"Enable=\"");
@@ -74,12 +74,14 @@ static void checkGlobalSettings()
 	if (enable[0])
 	{
 		sprintf(buffer,"gksudo --message \""SUDO_MESSAGE"\" \"sed -i.soundoutput.backup 's/Enable=/Enable=%s/' /etc/bluetooth/audio.conf\"",enable);
+		printf("%s\n",buffer);
 		system(buffer);
 	}
 	sprintf(buffer,"cat /usr/share/alsa/alsa.conf | grep -q \"~/.asoundrc\"");
 	if (system(buffer) == 0)
 	{
 		sprintf(buffer,"gksudo --message \""SUDO_MESSAGE"\" \"sed -i.soundoutput.backup 's,~/.asoundrc,/home/\\${USER}/.asoundrc,' /usr/share/alsa/alsa.conf\"");
+		printf("%s\n",buffer);
 		system(buffer);
 	}
 	p = fopen("/etc/asound.conf", "r");
@@ -87,6 +89,7 @@ static void checkGlobalSettings()
 	{
 		fclose(p);
 		sprintf(buffer,"gksudo --message \""SUDO_MESSAGE"\" \"mv /etc/asound.conf /etc/asound.conf.soundoutput.backup\"");
+		printf("%s\n",buffer);
 		system(buffer);
 	}
 }
